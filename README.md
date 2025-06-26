@@ -5,14 +5,12 @@
 ## Overview
 
 
-**Nexus Repository Manager** is a centralized artifact repository developed by **Sonatype**. It is used to **store, manage, and distribute binary artifacts** and dependencies such as:
-
-- - `.jar`, `.war`, `.ear` files (Java)
-- - Docker images
-- - npm packages
-- - Python packages
-- - Helm charts
-
+- **Nexus Repository Manager** is a centralized artifact repository developed by **Sonatype**. It is used to **store, manage, and distribute binary artifacts** and dependencies such as:
+    - `.jar`, `.war`, `.ear` files (Java)
+    - Docker images
+    - npm packages
+    - Python packages
+    - Helm charts
 - **Nexus** is a **repository manager** developed using **Java**.
 - It manages **binary artifacts** such as libraries, WAR files, Docker images, etc.
 - Acts as a **central hub** for build artifacts during the software lifecycle.
