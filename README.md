@@ -124,7 +124,6 @@ An Artifact Repository is used to **store compiled or built output artifacts** f
 
 Use Nexus when:
 - You need a **free** and **self-hosted** solution.
-- Your applications are **Java/Maven** based.
 - You want to manage both **snapshots and releases** efficiently.
 - You want to **proxy** remote repositories like Maven Central.
 
@@ -134,17 +133,17 @@ Use Nexus when:
 ### Snapshot Repository
 - Go to: `Settings → Repositories → Create repository`
 - Type: Maven2 (hosted)
-- Name: `jio-snapshot`
+- Name: `rushitech-maven-snapshot`
 - Version Policy: `Snapshot`
 
 ### Release Repository
-- Name: `jio-release`
+- Name: `rushitech-maven-release`
 - Version Policy: `Release`
 
 > Each has a **unique URL**:
 ```
-http://<ip>:port/repository/jio-snapshot/
-http://<ip>:port/repository/jio-release/
+http://<ip>:port/repository/rushitech-maven-snapshot/
+http://<ip>:port/repository/rushitech-maven-release/
 ```
 
 ---
