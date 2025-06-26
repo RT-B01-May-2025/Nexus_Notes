@@ -199,6 +199,200 @@ Settings → Repository → rushitech-maven-release → Hosted → Allow Redeplo
 ```bash
 mvn clean deploy
 ```
+---
+
+ Nexus Proxy Repository with Maven Setup
+
+How to configure a **Nexus Proxy Repository** for **Maven Central** and set up Maven to use it.
+
+---
+
+## What is a Nexus Proxy Repository?
+
+A **Proxy Repository** in Sonatype Nexus acts as a **caching proxy** for another repository (e.g., Maven Central). It:
+- Saves bandwidth
+- Speeds up builds
+- Provides a cache of artifacts
+
+---
+
+## Step-by-Step: Setup Nexus Proxy Repository for Maven Central
+
+### Step 1: Login to Nexus
+1. Open Nexus UI: `http://<your-nexus-host>:8081`
+2. Login with admin credentials
+
+---
+
+### Step 2: Create Proxy Repository
+1. Go to: **Repositories** → **Create repository**
+2. Choose: `maven2 (proxy)`
+3. Fill in details:
+   - **Name**: `maven-central`
+   - **Remote storage**: `https://repo1.maven.org/maven2/`
+   - **Blob store**: `default`
+   - **Version Policy**: `Release`
+   - **Layout Policy**: `Strict`
+   - **HTTP/HTTPS**: Enable one or both
+4. Click **Create Repository**
+
+---
+
+### Step 3: Configure Maven to Use Nexus Proxy
+
+You need to update your `~/.m2/settings.xml` or $M2_HOME/conf/settings.xml file to use the proxy.
+
+#### Example `settings.xml`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://NEXUSIPORHOSTNAME:8081/repository/maven-central/</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+	
+      <id>nexus</id>
+	  
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+      </repositories>
+	  
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+	  
+    </profile>
+	
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+  
+</settings>
+```
+
+> Replace `<your-nexus-host>` with your Nexus server IP or domain.
+
+---
+
+## Verify the Setup
+
+1. Run any Maven command (e.g., `mvn clean install`)
+2. Nexus should show artifact downloads cached in the **Browse** section under `maven-central`
+
+
+---
+
+## Section-wise Breakdown
+
+###  `<mirrors>` Configuration
+
+```xml
+<mirrors>
+  <mirror>
+    <id>nexus</id>
+    <mirrorOf>*</mirrorOf>
+    <url>http://<your-nexus-host>:8081/repository/maven-central/</url>
+  </mirror>
+</mirrors>
+```
+
+**What it does:**
+
+- Redirects all Maven repository requests (`mirrorOf="*"`) to Nexus.
+- Maven will fetch dependencies from:
+  ```
+  http://<your-nexus-host>:8081/repository/maven-central/
+  ```
+- Nexus will serve cached content or download it from the actual Maven Central and cache it.
+
+---
+
+###  `<profiles>` – Repository Definitions
+
+```xml
+<profiles>
+  <profile>
+    <id>nexus</id>
+    <repositories>
+      <repository>
+        <id>central</id>
+        <url>https://repo1.maven.org/maven2/</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>false</enabled></snapshots>
+      </repository>
+    </repositories>
+  </profile>
+</profiles>
+```
+
+**What it does:**
+
+- Defines a repository named `central` (Maven's default).
+- Serves as a placeholder since the actual fetching happens via the mirror.
+- Snapshots are disabled unless required.
+
+---
+
+###  `<activeProfiles>` – Activate the Nexus Profile
+
+```xml
+<activeProfiles>
+  <activeProfile>nexus</activeProfile>
+</activeProfiles>
+```
+
+**What it does:**
+
+- Activates the `nexus` profile so Maven includes the custom repository settings during builds.
+
+---
+
+
+###  `<pluginRepositories>` for Maven Plugins
+
+Maven also downloads plugins (e.g., `maven-compiler-plugin`, `maven-surefire-plugin`) from remote repositories. Configure plugin repositories as shown:
+
+```xml
+<pluginRepositories>
+  <pluginRepository>
+    <id>central</id>
+    <url>https://repo1.maven.org/maven2</url>
+    <releases><enabled>true</enabled></releases>
+    <snapshots><enabled>false</enabled></snapshots>
+  </pluginRepository>
+</pluginRepositories>
+```
+---
+
+## Summary
+
+| Step | Action |
+|------|--------|
+| 1 | Create a Maven proxy repo in Nexus |
+| 2 | Point `settings.xml` to the Nexus proxy repo |
+| 3 | Use Maven as usual — Nexus caches the dependencies |
 
 ---
 
