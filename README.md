@@ -201,11 +201,9 @@ mvn clean deploy
 ```
 ---
 
- Nexus Proxy Repository with Maven Setup
+# Nexus Proxy Repository with Maven Setup
 
-How to configure a **Nexus Proxy Repository** for **Maven Central** and set up Maven to use it.
-
----
+## How to configure a **Nexus Proxy Repository** for **Maven Central** and set up Maven to use it.
 
 ## What is a Nexus Proxy Repository?
 
