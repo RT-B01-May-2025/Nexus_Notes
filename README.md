@@ -248,6 +248,13 @@ You need to update your `~/.m2/settings.xml` or $M2_HOME/conf/settings.xml file 
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
                               https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <server>
+      <id>nexus</id>
+      <username>admin</username>
+      <password>password</password>
+  </server>
+
   <mirrors>
     <mirror>
       <id>nexus</id>
